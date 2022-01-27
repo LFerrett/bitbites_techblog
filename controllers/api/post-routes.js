@@ -1,130 +1,58 @@
-const router = require('express').Router();
-const sequelize = require('../../config/connection');
-const { Post, User, Comment } = require('../../models');
-const withAuth = require('../../utils/auth');
+const router = require("express").Router();
+const { Post } = require("../../models/");
+const withAuth = require("../../utils/auth");
 
-router.get('/', (req, res) => {
-    console.log('======================');
-    Post.findAll({
-      attributes: [
-        'id',
-        'title',
-        'content',
-        'created_at'
-      ],
-      order: [['created_at', "DESC"]],
-      include: [
-          {
-              model: Comment,
-              attributes: ['id', 'text', 'post_id', 'user_id', 'created_at'],
-              include: {
-                  model: User,
-                  attributes: ['username']
-              }
-          },
-        {
-          model: User,
-          attributes: ['username']
-        }
-    ]
-    })
-      .then(dbPostData => res.json(dbPostData))
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Application error" });
-      });
-  });
-
-router.get('/:id', (req, res) => {
-    Post.findOne({
-        where: {
-            id: req.params.id
-        },
-        attributes: ['id', 'title', 'content', 'created_at'],
-        include: [
-            {
-                model: Comment,
-                attributes: ['id', 'text', 'post_id', 'user_id', 'created_at'],
-                include: {
-                    model: User,
-                    attributes: ['username']
-                }
-            },
-            {
-                model: User,
-                attributes: ['username']
-            }
-        ]
-    })
-    .then(dbPostData => {
-        if (!dbPostData) {
-            res.status(404).json({ message: "No such post" })
-            return;
-        }
-        res.json(dbPostData);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Application error" });
-    });
+// Create Post
+router.post("/", withAuth, async (req, res) => {
+  const body = req.body;
+  console.log(body);
+  try {
+    const newPost = await Post.create({ ...body, userId: req.session.userId });
+    console.log("Here is the new post: ", newPost);
+    res.json(newPost);
+  } catch (err) {
+    console.log("IT FAILED!", err);
+    res.status(500).json(err);
+  }
 });
 
-router.post('/', withAuth, (req, res) => {
-    // expects {title: 'This is the title', content: 'This is the content', user_id: 1}
-    Post.create({
-        title: req.body.title,
-        content: req.body.content,
-        user_id: req.session.user_id
-    })
-    .then(dbPostData => res.json(dbPostData))
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: 'Application error' });
+// Edit Post
+router.put("/:id", withAuth, async (req, res) => {
+  try {
+    console.log("here is the req.body", req.body);
+    const [affectedRows] = await Post.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
     });
-});
 
-router.put('/:id', withAuth, (req, res) => {
-    Post.update({
-        title: req.body.title,
-    },
-    {
-        where: {
-            id: req.params.id
-        }
+    if (affectedRows > 0) {
+      res.status(200).end();
+    } else {
+      res.status(404).end();
     }
-    )
-    .then(dbPostData => {
-        if (!dbPostData) {
-            res.status(404).json({ message: 'No such post' });
-            return;
-        }
-        res.json(dbPostData);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Application error" });
-    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-// delete a post
-router.delete('/:id', withAuth, (req, res) => {
-    console.log(req.params.id, '-------------------');
-    Post.destroy({
-        where: {
-            id: req.params.id
-        }
-    })
-    .then(dbPostData => {
-        if (!dbPostData) {
-            res.status(404).json({ message: "No such post" })
-            return;
-        }
-        res.json(dbPostData);
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Application error" });
+// Delete Post
+router.delete("/:id", withAuth, async (req, res) => {
+  try {
+    const [affectedRows] = Post.destroy({
+      where: {
+        id: req.params.id,
+      },
     });
+
+    if (affectedRows > 0) {
+      res.status(200).end();
+    } else {
+      res.status(404).end();
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
