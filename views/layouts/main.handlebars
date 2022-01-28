@@ -1,40 +1,44 @@
-<!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Ghibli">
-  <title>Bit Bites: A Tech Blog</title>
-  <link href="/images/favicon.ico" rel="shortcut icon">
-  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Ghibli" />
+    <title>Bit Bites: A Tech Blog</title>
+    <link href="/images/favicon.ico" rel="shortcut icon" />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
 
-<body class="flex-column min-100-vh">
-  <nav class="navbar">
-    <ul>
-      <li class="li-inline nav-item"><a href="/">Home</a></li>
-      <li class="li-inline nav-item"><a href="/dashboard">Dashboard</a></li>
+  <body class="flex-column min-100-vh">
+    <nav class="navbar">
+      <ul>
+        <li class="li-inline nav-item"><a href="/">Home</a></li>
+        <li class="li-inline nav-item"><a href="/dashboard">Dashboard</a></li>
 
-      {{#unless loggedIn}}
-      <li class="li-inline nav-item"><a href="/login">Login</a></li>
-      {{/unless}}
-      <li class="li-inline nav-item"><a href="#" id="logout">Logout</a></li>
-    </ul>
-  </nav>
+        {{#if loggedIn}}
+          <li class="li-inline nav-item"><a href="/login">Login</a></li>
+        {{else}}
+          <li class="li-inline nav-item"><a href="/" id="logout">Logout</a></li>
+        {{/if}}
 
-  <header class="hero">
-    <h1 class="app-title"><a href="/">Bit Bites: A Tech Blog</a></h1>
-  </header>
+      </ul>
+    </nav>
 
-  <main class="col-auto">
-    {{{body}}}
-  </main>
+    <header class="hero">
+      <h1 class="app-title"><a href="/">Bit Bites: A Tech Blog</a></h1>
+    </header>
 
-</body>
+    <main class="col-auto">
+      {{{body}}}
+    </main>
+
+  </body>
 
 </html>
 {{#if loggedIn}}
-<script src="/js/logout.js"></script>
+  <script src="/js/logout.js"></script>
 {{/if}}
