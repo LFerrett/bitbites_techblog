@@ -1,4 +1,6 @@
 const postId = document.querySelector('input[name="post-id"]').value;
+console.log("testing");
+console.log(postId);
 
 const editFormHandler = async (event) => {
   event.preventDefault();
@@ -36,7 +38,9 @@ const deleteClickHandler = async () => {
 
   document.location.replace('/dashboard');
 };
-document.querySelector('#edit-post-form').addEventListener('submit', editFormHandler);
+document
+  .querySelector('#edit-post-form')
+  .addEventListener('submit', editFormHandler);
 document
   .querySelector('#delete-btn')
   .addEventListener('click', deleteClickHandler);
