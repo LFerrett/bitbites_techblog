@@ -30,17 +30,14 @@ User.init(
             validate: {
                 isEmail: true
             }
-
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                len: [3]
+                len: [5]
             }
         }
-
-
     },
     {
         hooks: {

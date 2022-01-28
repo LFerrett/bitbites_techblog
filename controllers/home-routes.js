@@ -9,34 +9,9 @@ router.get("/", async (req, res) => {
       include: [User],
     });
     const posts = postData.map((post) => post.get({ plain: true }));
-    res.render("all-posts-admin", { posts, loggedIn: req.session.loggedIn });
+    res.render("dashboard", { posts, loggedIn: req.session.loggedIn });
   } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// GET one post
-router.get("/post/:id", withAuth, async (req, res) => {
-  try {
-    const postData = await Post.findOne({
-      where: { id: req.params.id },
-      include: [
-        User,
-        {
-          model: Comment,
-          include: [User],
-        },
-      ],
-    });
-
-    if (postData) {
-      const post = postData.get({ plain: true });
-      console.log(post);
-      res.render("single-post", { post, loggedIn: req.session.loggedIn });
-    } else {
-      res.status(404).end();
-    }
-  } catch (err) {
+    console.log("Can't get all posts");
     res.status(500).json(err);
   }
 });
