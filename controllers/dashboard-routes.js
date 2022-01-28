@@ -10,26 +10,20 @@ router.get("/", withAuth, async (req, res) => {
       include: [User],
     });
     const posts = postData.map((post) => post.get({ plain: true }));
-    res.render('dashboard', { posts, loggedIn: req.session.loggedIn });
+    console.log(posts);
+    res.render("all-posts", {
+      layout: "dashboard",
+      posts,
+    });
   } catch (err) {
-    console.log(err);
     res.redirect("login");
   }
 });
 
-// Creat post
-router.get("/post/:id", withAuth, async (req, res) => {
-  try {
-    const postData = await Post.findByPk(req.params.id, { 
-      include: [{ model: User, attributes: { exclude: ['password'] } }], 
-      where: User.id = req.session.userId });
-    const post = postData.get({ plain: true });
-    console.log(post)
-    res.render('single-post', { ...post, loggedIn: req.session.loggedIn });
-
-  } catch (err) {
-    res.status(500).json(err)
-  }
+router.get("/new", withAuth, (req, res) => {
+  res.render("new-post", {
+    layout: "dashboard",
+  });
 });
 
 router.get("/edit/:id", withAuth, async (req, res) => {
