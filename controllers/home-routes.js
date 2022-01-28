@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
       include: { model: User, attributes: { exclude: "password" } },
     });
     const posts = postData.map((post) => post.get({ plain: true }));
-    res.render("homepage", { posts, loggedIn: req.session.loggedIn });
+    res.render("all-posts-admin", { posts, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
