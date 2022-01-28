@@ -1,37 +1,28 @@
-<article class="post">
-    <div class="single-post-title">
-        <span>{{post.title}}</span>
-        <span>Posted by {{post.user.username}} on
-            {{post.created_at}}
-            </span>
+<div class="card">
+  <div class="card-header  flex-row justify-space-between">
+    <h2>
+      <a href="/post/{{post.id}}">
+        <div class="col-8">{{post.postTitle}}</div>
+      </a>
+    </h2>
+    <div class="col-3">posted by {{post.user.username}} on {{format_date post.dateCreated}}
     </div>
+  </div>  
+  <p class="card-body">
+   {{post.postContent}}
+  </p>
+</div>
+<input type="hidden" name="post-id" value="{{post.id}}"/>
+
+<div class="card">
+  <div class="card-header"></div>
+  <form class="card-body" id="new-comment-form">
     
-
-    <div>
-        {{post.content}}
-    </div>
-
-    <div class="meta">
-        <a href="/post/{{id}}">{{post.comments.length}} Comment(s)</a>
-    </div>
-</article>
-{{#if loggedIn}}
-<form class="comment-form">
-    <div>
-        <textarea name="comment-body"></textarea>
-    </div>
-
-    <div>
-        <button type="submit">Add Comment</button>
-    </div>
-</form>
-{{/if}}
-
+    <p class="form-label">Comment:</p>
+    <textarea class="form-input" id="comment-body" name="comment-body"></textarea>
+    <button type="submit" class="btn btn-primary">Submit:</button>
+  </form>
 {{> comments post.comments}}
+</div>
 
-
-
-
-{{#if loggedIn}}
-<script src="/javascript/comment.js"></script>
-{{/if}}
+<script src="/js/comment.js"></script>

@@ -1,35 +1,21 @@
-<article>
-  <a href="/dashboard" style="color: #4f305e;"> Back to Dashboard</a>
-  <h2>
-    Edit Post
-  </h2>
-  <form class="edit-post-form">
+<div class="card">
+  <h2 class="card-header">Edit Post</h2>
+  <form class="card-body" id="edit-post-form">
+      <div>
+      <label class="form-label">Title:</label>
+      <input class="form-input" type="text" name="post-title" value="{{post.postTitle}}"/>
+    </div>
+    
     <div>
-      <input name="post-title" type="text" value="{{post.title}}" />
-      </br>
-      
-      
+      <label class="form-label">Content:</label>
+      <textarea class="form-textarea form-input" name="post-body" data-number="8">{{post.postContent}}</textarea>
     </div>
-    
-    <button type="button">Save</button>
-    <button type="button" class="delete-post-btn">Delete</button>
+ 
+    <button class="btn btn-primary" type="submit">Edit</button>
+    <input type="hidden" name="post-id" value="{{post.id}}"/>
   </form>
-</article>
-
-<form class="comment-form">
-  <div>
-    <textarea name="comment-body"></textarea>
-  </div>
-
-  <div>
-    <button type="submit">Add Comment</button>
-  </div>
-  <div>
-    
-      <a href="/post/{{post.id}}" style="color: #4f305e;">{{post.comments.length}} {{format_plural "comment" post.comments.length}}</a>
-    </div>
-</form>
-
-<script src="/javascript/edit-post.js"></script>
-<script src="/javascript/delete-post.js"></script>
-<script src="/javascript/comment.js"></script>
+  <div class="card-body">
+   <button class="btn btn-primary" type="click" id="delete-btn">Delete</button>
+  </div> 
+</div>
+<script src="/js/edit.js"></script>
