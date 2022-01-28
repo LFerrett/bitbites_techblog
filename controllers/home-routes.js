@@ -5,13 +5,38 @@ const withAuth = require("../utils/auth");
 // GET all posts
 router.get("/", async (req, res) => {
   try {
-   const postData = await Post.findAll({
+    const postData = await Post.findAll({
       include: [User],
     });
     const posts = postData.map((post) => post.get({ plain: true }));
     res.render("dashboard", { posts, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log("Can't get all posts");
+    res.status(500).json(err);
+  }
+});
+
+// GET single post
+router.get("/post/:id", withAuth, async (req, res) => {
+  try {
+    const postData = await Post.findOne({
+      where: { id: req.params.id },
+      include: [
+        User,
+        {
+          model: Comment,
+          include: [User],
+        },
+      ],
+    });
+    if (postData) {
+      const post = postData.get({ plain: true });
+      console.log(post);
+      res.render("single-post", { post, loggedIn: req.session.loggedIn });
+    } else {
+      res.status(404).end();
+    }
+  } catch (err) {
     res.status(500).json(err);
   }
 });
