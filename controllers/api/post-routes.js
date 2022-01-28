@@ -1,22 +1,23 @@
-const router = require("express").Router();
-const { Post } = require("../../models/");
-const withAuth = require("../../utils/auth");
+const router = require('express').Router();
+const { Post } = require('../../models/');
+const withAuth = require('../../utils/auth');
 
-// Create Post
-router.post("/", withAuth, async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
   const body = req.body;
-  console.log(body);
+    console.log(body);
   try {
     const newPost = await Post.create({ ...body, userId: req.session.userId });
+    console.log("Here is the new post: ",  newPost);
     res.json(newPost);
-  } catch (err) {
+     } catch (err) {
+       console.log('IT FAILED!', err);
     res.status(500).json(err);
   }
 });
 
-// Edit Post
-router.put("/:id", withAuth, async (req, res) => {
+router.put('/:id', withAuth, async (req, res) => {
   try {
+    console.log('here is the req.body', req.body);
     const [affectedRows] = await Post.update(req.body, {
       where: {
         id: req.params.id,
@@ -33,8 +34,7 @@ router.put("/:id", withAuth, async (req, res) => {
   }
 });
 
-// Delete Post
-router.delete("/:id", withAuth, async (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
   try {
     const [affectedRows] = Post.destroy({
       where: {
