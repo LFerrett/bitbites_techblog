@@ -1,26 +1,23 @@
-const router = require("express").Router();
-const { Post, Comment, User } = require("../models/");
-const withAuth = require("../utils/auth");
+const router = require('express').Router();
+const { Post, Comment, User } = require('../models/');
+const withAuth = require('../utils/auth');
 
-// GET all posts
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const postData = await Post.findAll({
       include: [User],
     });
     const posts = postData.map((post) => post.get({ plain: true }));
-    res.render("dashboard", { posts, loggedIn: req.session.loggedIn });
+    res.render('all-posts-admin', { posts, loggedIn: req.session.loggedIn});
   } catch (err) {
-    console.log("Can't get all posts");
     res.status(500).json(err);
   }
 });
 
-// GET single post
-router.get("/post/:id", withAuth, async (req, res) => {
+router.get('/post/:id', withAuth, async (req, res) => {
   try {
     const postData = await Post.findOne({
-      where: { id: req.params.id },
+      where: {id: req.params.id},
       include: [
         User,
         {
@@ -29,10 +26,11 @@ router.get("/post/:id", withAuth, async (req, res) => {
         },
       ],
     });
+
     if (postData) {
       const post = postData.get({ plain: true });
       console.log(post);
-      res.render("single-post", { post, loggedIn: req.session.loggedIn });
+      res.render('single-post', { post, loggedIn: req.session.loggedIn});
     } else {
       res.status(404).end();
     }
@@ -41,23 +39,21 @@ router.get("/post/:id", withAuth, async (req, res) => {
   }
 });
 
-// Login
-router.get("/login", (req, res) => {
+router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/dashboard");
+    res.redirect('/dashboard');
     return;
   }
-  res.render("login");
+  res.render('login');
 });
 
-// Signup
-router.get("/signup", (req, res) => {
+router.get('/signup', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/dashboard");
+    res.redirect('/dashboard');
     return;
   }
 
-  res.render("signup");
+  res.render('signup');
 });
 
 module.exports = router;
