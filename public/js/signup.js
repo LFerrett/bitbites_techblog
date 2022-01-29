@@ -1,4 +1,4 @@
-const signupFormHandler = async (event) => {
+const signupFormHandler = async function (event) {
   event.preventDefault();
 
   const username = document
