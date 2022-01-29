@@ -12,13 +12,13 @@ Post.init(
       autoIncrement: true,
     },
     postTitle: {
-      type: DataTypes.STRING(25),
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
     postContent: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
     dateCreated: {
