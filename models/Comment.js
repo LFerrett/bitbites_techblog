@@ -15,9 +15,6 @@ Comment.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        len: [1],
-      },
     },
     dateCreated: {
       type: DataTypes.DATEONLY,
@@ -33,7 +30,6 @@ Comment.init(
     },
     postId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: "post",
         key: "id",
