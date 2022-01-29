@@ -1,22 +1,22 @@
 const router = require("express").Router();
 const { User, Post, Comment } = require("../models");
+const withAuth = require("../utils/auth");
 
 router.get("/", async (req, res) => {
   try {
     const postData = await Post.findAll({
-      include: { model: User, attributes: { exclude: "password" } },
+      include: [User],
     });
     const posts = postData.map((post) => post.get({ plain: true }));
     res.render("all-posts-admin", { posts, loggedIn: req.session.loggedIn });
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
 
 router.get("/signup", (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/");
+    res.redirect("/dashboard");
     return;
   }
   res.render("signup");
@@ -24,27 +24,33 @@ router.get("/signup", (req, res) => {
 
 router.get("/login", (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/");
+    res.redirect("/dashboard");
     return;
   }
   res.render("login");
 });
 
-router.get("/post/:id", async (req, res) => {
+router.get("/post/:id", withAuth, async (req, res) => {
   try {
-    const postData = await Post.findByPk(req.params.id, {
+    const postData = await Post.findOne(req.params.id, {
+      where: { id: req.params.id },
       include: [
+        User,
         {
           model: Comment,
-          include: { model: User, attributes: { exclude: "password" } },
+          include: [User],
         },
-        { model: User, attributes: { exclude: "password" } },
       ],
     });
-    const post = postData.get({ plain: true });
-    res.render("general-post", { ...post, loggedIn: req.session.loggedIn });
+
+    if (postData) {
+      const post = postData.get({ plain: true });
+      console.log(post);
+      res.render("single-post", { post, loggedIn: req.session.loggedIn });
+    } else {
+      res.status(404).end();
+    }
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
