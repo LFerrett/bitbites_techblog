@@ -1,2 +1,2 @@
-web: node seed/seed.js
+web: node seed/index.js
 web: node server.js
