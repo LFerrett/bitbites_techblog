@@ -3,7 +3,7 @@ const postId = document.querySelector('input[name="post-id"]').value;
 const editFormHandler = async (event) => {
   event.preventDefault();
 
-  const postTitle = document.querySelector('input[name="post-title"]').value;
+  const postTitle = document.querySelector('input[name="postTitle"]').value;
   const postContent = document.querySelector('textarea[name="post-body"]').value;
 
   const response = await fetch(`/api/post/${postId}`, {
